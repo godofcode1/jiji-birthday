@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday!</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090a16;
+      --bg2: #150f3a;
+      --text: #ffe1f8;
+      --accent: #ff6ec7;
+      --accent2: #55f4ff;
+      --shadow: rgba(255, 110, 199, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #2b0b4a 0%, #090a16 45%, #04040f 100%);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .page {
+      position: relative;
+      width: min(100%, 960px);
+      padding: 32px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(16,15,40,0.96), rgba(10,9,24,0.96));
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+
+    .stars,
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.55; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: grid;
+      gap: 28px;
+    }
+
+    .title {
+      font-size: clamp(2.4rem, 4vw, 4.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      margin: 0;
+      text-transform: uppercase;
+      text-shadow: 0 0 45px rgba(255, 110, 199, 0.3);
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 1.15rem;
+      color: #d4c5ff;
+      opacity: 0.94;
+      transition: opacity 0.6s ease;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      gap: 22px;
+      padding: 28px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      backdrop-filter: blur(14px);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    .flower-frame {
+      font-family: "Courier New", Courier, monospace;
+      line-height: 1.05;
+      white-space: pre;
+      font-size: clamp(0.85rem, 1vw, 1.05rem);
+      color: #f9f0ff;
+      min-height: 12rem;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      animation: appear 0.9s forwards ease-out;
+    }
+
+    .flower-frame.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .cake {
+      padding: 1rem 1.2rem;
+      border-radius: 22px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      background: rgba(7,7,23,0.65);
+      color: #b3d8ff;
+      font-family: "Courier New", Courier, monospace;
+      white-space: pre;
+      font-size: clamp(0.95rem, 1vw, 1.1rem);
+      opacity: 0;
+      transform: scale(0.96);
+      animation: reveal 0.8s ease-out 1.3s forwards;
+    }
+
+    .message {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #ddd6ff;
+      margin: 0;
+      max-width: 720px;
+      margin-inline: auto;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: reveal 0.8s ease-out 1.6s forwards;
+    }
+
+    .message strong {
+      color: #ff9aec;
+    }
+
+    .wish {
+      font-size: 1rem;
+      color: #b1f3ff;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: reveal 0.8s ease-out 1.9s forwards;
+    }
+
+    @keyframes reveal {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes appear {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      border-radius: 3px;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translate3d(0,0,0) rotate(0deg); opacity: 1; }
+      20% { opacity: 1; }
+      100% { transform: translate3d(var(--x,0px), 110vh, 0) rotate(720deg); opacity: 0.1; }
+    }
+
+    .footer {
+      font-size: 0.95rem;
+      color: #9288b8;
+      opacity: 0.9;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 620px) {
+      .page { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="stars" aria-hidden="true"></div>
+    <div class="confetti" aria-hidden="true"></div>
+
+    <div class="content">
+      <div>
+        <h1 class="title">Happy Birthday!</h1>
+        <p class="subtitle">Wishing you the best day ever with blooming joy and sparkling surprises.</p>
+      </div>
+
+      <section class="card">
+        <div id="flower" class="flower-frame"></div>
+        <div id="cake" class="cake"></div>
+        <p class="message"><strong>Happy Birthday!</strong> May your special day bloom with laughter, love, and wonderful memories. You deserve the brightest moments and the sweetest wishes.</p>
+        <p class="wish">Wish you the best today and always — have an amazing celebration! 🎉</p>
+      </section>
+      <p class="footer">Built with love, animated for a magical celebration.</p>
+    </div>
+  </div>
+
+  <script>
+    const frames = [
+      "\n\n\n         .\n         |\n        \\\n         |\n",
+      "\n\n        ( )\n         |\n        /|\\\n         |\n",
+      "\n       .-'-.
+      (  o  )\n       \'-'/\n         |\n        /|\\\n",
+      "\n     .-\"\"\"'-.
+    (   (o)   )\n     '-.   .-'
+        `|` \n         |\n        /|\\\n",
+      "\n      .-~~-.\n    .-'     '-.\n   (   ( (o) )   )\n    '-.  .  .-'\n      `'-..-'`\n         |\n        /|\\\n",
+      "\n          .-.\n        .-'   '-.\n       (  .---.  )\n     .-' (     ) '-.\n    (    (  o  )    )\n     '-. (     ) .-'\n       (  '---'  )\n        '-.   .-'\n          '-'\n           |\n          /|\\\n"
+    ];
+
+    const cakeArt = `\n       i i i i i\n      |: : : : :|\n    __|_________|__\n   |_______________|\n   |;:;:;:;:;:;:;:;|\n   |________________|\n\n`;
+
+    const flowerDiv = document.getElementById('flower');
+    const cakeDiv = document.getElementById('cake');
+    let currentIndex = 0;
+
+    const nextFrame = () => {
+      flowerDiv.textContent = frames[currentIndex];
+      flowerDiv.classList.add('visible');
+      currentIndex += 1;
+      if (currentIndex < frames.length) {
+        setTimeout(() => {
+          flowerDiv.classList.remove('visible');
+          setTimeout(nextFrame, 220);
+        }, 700);
+      } else {
+        setTimeout(() => {
+          cakeDiv.textContent = cakeArt;
+        }, 300);
+      }
+    };
+
+    const createStars = () => {
+      const stars = document.querySelector('.stars');
+      const count = 32;
+      for (let i = 0; i < count; i += 1) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3 + 2;
+        Object.assign(star.style, {
+          width: `${size}px`,
+          height: `${size}px`,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 2}s`,
+          animationDuration: `${2.2 + Math.random() * 1.5}s`,
+          opacity: `${0.45 + Math.random() * 0.5}`
+        });
+        stars.appendChild(star);
+      }
+    };
+
+    const createConfetti = () => {
+      const confettiArea = document.querySelector('.confetti');
+      const colors = ['#ff5ec4', '#5ae5ff', '#76ff9b', '#ffd86b', '#d78fff'];
+      const count = 42;
+      for (let i = 0; i < count; i += 1) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        const size = 8 + Math.random() * 8;
+        const xOffset = Math.random() * 80 - 40;
+        const left = Math.random() * 100;
+        const delay = Math.random() * 1.2;
+        const duration = 3 + Math.random() * 2.5;
+        Object.assign(piece.style, {
+          width: `${size}px`,
+          height: `${size * 0.45}px`,
+          left: `${left}%`,
+          top: `${-Math.random() * 20}%`,
+          background: colors[Math.floor(Math.random() * colors.length)],
+          transform: `rotate(${Math.random() * 360}deg)`,
+          animationDuration: `${duration}s`,
+          animationDelay: `${delay}s`,
+          '--x': `${xOffset}px`
+        });
+        confettiArea.appendChild(piece);
+      }
+    };
+
+    createStars();
+    createConfetti();
+    nextFrame();
+  </script>
+</body>
+</html>
