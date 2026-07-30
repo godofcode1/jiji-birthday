@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -231,7 +231,7 @@
       <div><span class="icon">🍰</span><span class="val">+3</span></div>
       <div><span class="icon">🧁</span><span class="val">+4</span></div>
       <div><span class="icon">🎊</span><span class="val">+8</span></div>
-      <div class="bad"><span class="icon">🔥</span><span class="val">&minus;1</span></div>
+      <div class="bad"><span class="icon">🔥</span><span class="val">−1</span></div>
     </div>
     <button class="primary" id="startBtn">Start game</button>
   </div>
@@ -294,7 +294,6 @@
     const type = ['stripes', 'checkers', 'crosshatch', 'smooth'][i % 4];
     themes.push({ type, colors: pair });
   });
-  // shuffle-ish fixed sequence so it always alternates pattern types
   const order = ['smooth', 'stripes', 'checkers', 'crosshatch'];
   const sequence = [];
   for (let i = 0; i < BLUES.length; i++) {
@@ -327,7 +326,6 @@
 
   function cyclePattern() {
     idx = (idx + 1) % sequence.length;
-    const nextTheme = sequence[(idx + 1) % sequence.length];
     if (showingA) {
       applyTheme(bgB, sequence[idx]);
       bgA.style.opacity = 0;
@@ -379,16 +377,15 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ---------- Game state ----------
   const GOOD_ITEMS = [
-    { emoji: '🎂', points: 5, weight: 6 },   // classic birthday cake
-    { emoji: '🍰', points: 3, weight: 6 },   // cake slice
-    { emoji: '🧁', points: 4, weight: 5 },   // cupcake
-    { emoji: '🎊', points: 8, weight: 2 },   // rare golden confetti cake bonus
+    { emoji: '🎂', points: 5, weight: 6 },
+    { emoji: '🍰', points: 3, weight: 6 },
+    { emoji: '🧁', points: 4, weight: 5 },
+    { emoji: '🎊', points: 8, weight: 2 },
   ];
-  const BAD_ITEM = { emoji: '🔥', points: 0, weight: 3 };  // burnt cake — dodge it
+  const BAD_ITEM = { emoji: '🔥', points: 0, weight: 3 };
 
-  let state = 'start'; // start | playing | lose | win
+  let state = 'start';
   let score = 0;
   let lives = 3;
   const WIN_SCORE = 50;
@@ -398,7 +395,7 @@
   let spawnTimer = 0;
   let spawnInterval = 900;
   let elapsedTime = 0;
-  let particles = []; // catch-burst particles
+  let particles = [];
 
   function resetGame() {
     score = 0;
@@ -462,7 +459,6 @@
     }
   }
 
-  // ---------- Input ----------
   function setPlateTargetFromClientX(clientX) {
     const rect = canvas.getBoundingClientRect();
     const x = clientX - rect.left;
@@ -490,7 +486,6 @@
   window.addEventListener('keydown', (e) => { keys[e.key] = true; });
   window.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
-  // ---------- Screens ----------
   function showScreen(name) {
     startScreen.classList.add('hidden');
     loseScreen.classList.add('hidden');
@@ -528,7 +523,6 @@
     stopConfetti();
   });
 
-  // ---------- Confetti ----------
   let confettiParticles = [];
   let confettiAnim = null;
   function startConfetti() {
@@ -574,10 +568,8 @@
     confettiAnim = requestAnimationFrame(confettiLoop);
   }
 
-  // ---------- Drawing ----------
   function drawBackground() {
     ctx.clearRect(0, 0, W, H);
-    // soft clouds/stars are handled by CSS gradient body; add a subtle floor
     const grad = ctx.createLinearGradient(0, H - 90, 0, H);
     grad.addColorStop(0, 'rgba(255,255,255,0)');
     grad.addColorStop(1, 'rgba(255,255,255,0.08)');
@@ -622,20 +614,14 @@
     ctx.globalAlpha = 1;
   }
 
-  // ---------- Update ----------
   function update(dt) {
     elapsedTime += dt;
-
-    // plate movement (keyboard)
     const speed = 9;
     if (keys['ArrowLeft'] || keys['a']) plate.targetX -= speed;
     if (keys['ArrowRight'] || keys['d']) plate.targetX += speed;
     plate.targetX = Math.max(plate.w / 2, Math.min(W - plate.w / 2, plate.targetX));
-
-    // smooth follow
     plate.x += (plate.targetX - plate.x) * 0.25;
 
-    // spawn
     spawnTimer += dt;
     const currentInterval = Math.max(380, spawnInterval - elapsedTime / 60);
     if (spawnTimer > currentInterval) {
@@ -643,13 +629,10 @@
       spawnItem();
     }
 
-    // move items
     for (let i = items.length - 1; i >= 0; i--) {
       const it = items[i];
       it.y += it.vy;
       it.rot += it.vrot;
-
-      // collision with plate
       const dx = Math.abs(it.x - plate.x);
       const dy = Math.abs(it.y - plate.y);
       if (dy < plate.h * 1.4 && dx < plate.w / 2 + 8) {
@@ -675,17 +658,11 @@
         }
         continue;
       }
-
-      // missed (fell off bottom)
       if (it.y - it.size / 2 > H) {
         items.splice(i, 1);
-        if (!it.bad) {
-          // no penalty for missing good items, keep it forgiving/fun
-        }
       }
     }
 
-    // particles
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.x += p.vx;
@@ -696,12 +673,10 @@
     }
   }
 
-  // ---------- Main loop ----------
   let lastTime = performance.now();
   function loop(now) {
     const dt = Math.min(now - lastTime, 40);
     lastTime = now;
-
     if (state === 'playing') {
       update(dt);
       drawBackground();
@@ -709,7 +684,6 @@
       drawPlate();
       drawParticles();
     }
-
     requestAnimationFrame(loop);
   }
 
